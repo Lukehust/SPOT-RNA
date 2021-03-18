@@ -10,7 +10,7 @@ start = time.time()
 from argparse import RawTextHelpFormatter
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--inputs', default='sample_inputs/2zzm-B.fasta', type=str, help='Path to input file in fasta format, accept multiple sequences as well in fasta format; default = ''sample_inputs/single_seq.fasta''\n', metavar='')
+parser.add_argument('--inputs', default='sample_inputs/single_seq.fasta', type=str, help='Path to input file in fasta format, accept multiple sequences as well in fasta format; default = ''sample_inputs/single_seq.fasta''\n', metavar='')
 parser.add_argument('--outputs',default='outputs/', type=str, help='Path to output files; SPOT-RNA outputs at least three files .ct, .bpseq, and .prob files; default = ''outputs/\n', metavar='')
 parser.add_argument('--gpu', default=-1, type=int, help='To run on GPU, specifiy GPU number. If only one GPU in computer specifiy 0; default = -1 (no GPU)\n', metavar='')
 parser.add_argument('--plots',default=False, type=bool, help='Set this to "True" to get the 2D plots of predicted secondary structure by SPOT-RNA; default = False\n', metavar='')
@@ -48,12 +48,12 @@ test_loc = [os.path.join(base_path, 'input_tfr_files', input_file+'.tfrecords')]
 outputs = {}
 mask = {}
 def sigmoid(x):
-    return 1/(1+np.exp(-np.array(x, dtype=np.float128)))
+    return 1/(1+np.exp(-np.array(x, dtype=np.longfloat)))
 
 for MODEL in range(NUM_MODELS):
 
     if args.gpu==-1:
-            config = tf.ConfigProto(intra_op_parallelism_threads=args.cpu, inter_op_parallelism_threads=args.cpu)
+        config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=args.cpu, inter_op_parallelism_threads=args.cpu)
     else:
 	    config = tf.compat.v1.ConfigProto()
 	    config.allow_soft_placement=True
